@@ -38,10 +38,11 @@ class CheckSameOrder extends Command
        
        CASE WHEN t1.category->>'v'='footer' AND t1.data->'v'->>'column'!='' THEN 'c-footer' ELSE t1.category->>'v' END as category, 
        
-       t1.ord->>'v' as ord, t1.name->>'v' as name1, t2.name->>'v' as name2 
+       t1.ord->>'v' as ord, t1.name->>'v' as name1, t2.name->>'v' as name2, t1.version->>'v' as version 
 from \"$s\".tables_fields t1 left join \"$s\".tables_fields t2 ON t1.table_id->>'v'=t2.table_id->>'v' AND t1.ord->>'v'=t2.ord->>'v' AND t1.category->>'v'=t2.category->>'v' 
                                                                             AND  (t2.category->>'v'!='footer' OR ((t1.data->'v'->>'column'='' AND t2.data->'v'->>'column'='') OR (t1.data->'v'->>'column'!='' AND t2.data->'v'->>'column'!='')))   
                                                                             AND t1.id>t2.id
+                                                                            AND ((t1.version->>'v'=t2.version->>'v') OR (t1.version->>'v' is null AND t2.version->>'v' is null))
 where t2.ord is not null".($simple?" AND t1.name->>'v'<t2.name->>'v' AND t1.table_name->>'v' not in ('ttm__search_settings')":''));
 
                 array_multisort(array_column($r, 'table'), array_column($r, 'category'), array_column($r, 'ord'), $r);
