@@ -34,8 +34,14 @@ class CheckSameOrder extends Command
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion('Check same order fields from schema "' . $s . '"?', true);
             if ($helper->ask($input, $output, $question)) {
-                $r = $Conf->getSql(null, false)->getAll("select t1.table_name->>'v' as table, t1.category->>'v' as category, t1.ord->>'v' as ord, t1.name->>'v' as name1, t2.name->>'v' as name2 
-from \"$s\".tables_fields t1 left join \"$s\".tables_fields t2 ON t1.table_id->>'v'=t2.table_id->>'v' AND t1.ord->>'v'=t2.ord->>'v' AND t1.category->>'v'=t2.category->>'v' AND t1.id>t2.id
+                $r = $Conf->getSql(null, false)->getAll("select t1.table_name->>'v' as table, 
+       
+       CASE WHEN t1.category->>'v'='footer' AND (t1.data->'v'->>'column'!='' OR t2.data->'v'->>'column'!='') THEN 'c-footer' ELSE t1.category->>'v' END as category, 
+       
+       t1.ord->>'v' as ord, t1.name->>'v' as name1, t2.name->>'v' as name2 
+from \"$s\".tables_fields t1 left join \"$s\".tables_fields t2 ON t1.table_id->>'v'=t2.table_id->>'v' AND t1.ord->>'v'=t2.ord->>'v' AND t1.category->>'v'=t2.category->>'v' 
+                                                                            AND  (t2.category->>'v'!='footer' OR ((t1.data->'v'->>'column'='' AND t2.data->'v'->>'column'='') OR (t1.data->'v'->>'column'!='' AND t2.data->'v'->>'column'!='')))   
+                                                                            AND t1.id>t2.id
 where t2.ord is not null".($simple?" AND t1.name->>'v'<t2.name->>'v' AND t1.table_name->>'v' not in ('ttm__search_settings')":''));
 
                 array_multisort(array_column($r, 'table'), array_column($r, 'category'), array_column($r, 'ord'), $r);
