@@ -52,7 +52,7 @@ where t2.ord is not null".($simple?" AND t1.name->>'v'<t2.name->>'v' AND t1.tabl
                 } else {
                     $table = new Table($output);
                     $table
-                        ->setHeaders(['table_name', 'category', 'sort', 'name1', 'name2'])
+                        ->setHeaders(['table_name', 'category', 'sort', 'name1', 'name2', 'version'])
                         ->setRows($r);
                     $table->render();
 
