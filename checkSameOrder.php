@@ -41,7 +41,7 @@ where t2.ord is not null".($simple?" AND t1.name->>'v'<t2.name->>'v' AND t1.tabl
                 array_multisort(array_column($r, 'table'), array_column($r, 'category'), array_column($r, 'ord'), $r);
 
                 if (empty($r)) {
-                    $output->writeln('<info>Duplicated by Sort fields not found in schema "' . $s . '".</info>');
+                    $output->writeln('<info>Duplicated by Sort fields are not found in schema "' . $s . '".</info>');
                 } else {
                     $table = new Table($output);
                     $table
