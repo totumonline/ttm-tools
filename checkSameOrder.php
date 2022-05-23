@@ -36,7 +36,7 @@ class CheckSameOrder extends Command
             if ($helper->ask($input, $output, $question)) {
                 $r = $Conf->getSql(null, false)->getAll("select t1.table_name->>'v' as table, 
        
-       CASE WHEN t1.category->>'v'='footer' AND (t1.data->'v'->>'column'!='' OR t2.data->'v'->>'column'!='') THEN 'c-footer' ELSE t1.category->>'v' END as category, 
+       CASE WHEN t1.category->>'v'='footer' AND t1.data->'v'->>'column'!='' THEN 'c-footer' ELSE t1.category->>'v' END as category, 
        
        t1.ord->>'v' as ord, t1.name->>'v' as name1, t2.name->>'v' as name2 
 from \"$s\".tables_fields t1 left join \"$s\".tables_fields t2 ON t1.table_id->>'v'=t2.table_id->>'v' AND t1.ord->>'v'=t2.ord->>'v' AND t1.category->>'v'=t2.category->>'v' 
