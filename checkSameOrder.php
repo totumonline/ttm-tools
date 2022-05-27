@@ -18,12 +18,15 @@ class CheckSameOrder extends Command
     {
         $this->setName('get-order-duplicated-fields');
         $this->addOption('all', '', InputOption::VALUE_NONE, 'Display oll duplicated by sort fields - with correct order by name');
+        $this->addOption('schema', '', InputOption::VALUE_OPTIONAL, 'Schema name to search');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $Conf = new Conf();
-        if (!method_exists($Conf, 'setHostSchema')) {
+        if ($input->getOption('schema')) {
+            $schemas = [$input->getOption('schema')];
+        } elseif (!method_exists($Conf, 'setHostSchema')) {
             $schemas = [$Conf->getSchema(false)];
         } else {
             $schemas = array_unique(array_values($Conf->getSchemas()));
